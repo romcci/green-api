@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green API Integration Panel title></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: #0f172a;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .split-container {
+            display: flex;
+            height: 100vh;
+        }
+        .left-panel {
+            width: 50%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .right-panel {
+            width: 50%;
+            background: #0a0a0a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .response-area {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #333;
+            flex: 1;
+            resize: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #1a1a1a;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+        }
+        .btn-method {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        .btn-method:hover {
+            background: linear-gradient(45deg, #16a34a, #15803d);
+            transform: translateY(-1px);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .input-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .input-list li {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .clear-btn {
+            background: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Panel - Input Forms -->
+        <div class="left-panel">
+            <div class="header">
+                <i class="fas fa-cog mr-2"></i>
+                Green API Панель Управления
+            </div>
+            
+            <ul class="input-list">
+                <!-- Поле ввода id instance -->
+                <li>
+                    <label class="form-label">ID Instance</label>
+                    <input type="text" id="idInstance" placeholder="Введите ID Instance" class="input-field">
+                </li>
+                
+                <!-- Поле ввода api token -->
+                <li>
+                    <label class="form-label">API Token Instance</label>
+                    <input type="text" id="apiTokenInstance" placeholder="Введите API Token" class="input-field">
+                </li>
+                
+                <!-- Кнопка get settings -->
+                <li>
+                    <button onclick="getSettings()" class="btn-method w-full">
+                        <i class="fas fa-cog mr-2"></i>
+                        Get Settings
+                    </button>
+                </li>
+                
+                <!-- Кнопка get stateinstance -->
+                <li>
+                    <button onclick="getStateInstance()" class="btn-method w-full">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Get State Instance
+                    </button>
+                </li>
+                
+                <!-- Поле ввода номера телефона для sendMessage -->
+                <li>
+                    <label class="form-label">Номер телефона (sendMessage)</label>
+                    <input type="text" id="phoneNumber" placeholder="79001234567" class="input-field">
+                </li>
+                
+                <!-- Поле ввода сообщения для sendMessage -->
+                <li>
+                    <label class="form-label">Сообщение</label>
+                    <input type="text" id="messageText" placeholder="Текст сообщения" class="input-field">
+                </li>
+                
+                <!-- Кнопка send message -->
+                <li>
+                    <button onclick="sendMessage()" class="btn-method w-full">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Send Message
+                    </button>
+                </li>
+                
+                <!-- Поле ввода номера телефона для sendFileByUrl -->
+                <li>
+                    <label class="form-label">Номер телефона (sendFile)</label>
+                    <input type="text" id="filePhoneNumber" placeholder="79001234567" class="input-field">
+                </li>
+                
+                <!-- Поле ввода url file для sendFileByUrl -->
+                <li>
+                    <label class="form-label">URL файла</label>
+                    <input type="text" id="fileUrl" placeholder="https://example.com/file.jpg" class="input-field">
+                </li>
+                
+                <!-- Кнопка send file by url -->
+                <li>
+                    <button onclick="sendFileByUrl()" class="btn-method w-full">
+                        <i class="fas fa-file-upload mr-2"></i>
+                        Send File by URL
+                    </button>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Right Panel - Response Area -->
+        <div class="right-panel">
+            <div style="color: #e2e8f0; font-size: 16px; font-weight: 600; margin-bottom: 15px; text-align: center;">
+                <i class="fas fa-terminal mr-2"></i>
+                Ответ API
+            </div>
+            
+            <textarea id="responseArea" readonly class="response-area" placeholder="Ответ от API появится здесь..."></textarea>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <button onclick="clearResponse()" class="clear-btn">
+                    <i class="fas fa-trash mr-2"></i>
+                    Очистить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Green API Base URL
+        const GREEN_API_BASE = 'https://api.green-api.com';
+
+        // Get connection parameters
+        function getConnectionParams() {
+            const idInstance = document.getElementById('idInstance').value.trim();
+            const apiTokenInstance = document.getElementById('apiTokenInstance').value.trim();
+            
+            if (!idInstance || !apiTokenInstance) {
+                throw new Error('Пожалуйста, заполните ID Instance и API Token Instance');
+            }
+            
+            return { idInstance, apiTokenInstance };
+        }
+
+        // Display response
+        function displayResponse(data, error = null) {
+            const responseArea = document.getElementById('responseArea');
+            const timestamp = new Date().toLocaleString('ru-RU');
+            const separator = '='.repeat(50);
+            
+            let response = `${separator}\n`;
+            response += `Время: ${timestamp}\n`;
+            response += `${separator}\n`;
+            
+            if (error) {
+                response += `ОШИБКА: ${error}\n`;
+            } else {
+                response += JSON.stringify(data, null, 2);
+            }
+            
+            response += `\n${separator}\n`;
+            
+            responseArea.value = responseArea.value + response;
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+
+        // Get Settings Method
+        async function getSettings() {
+            try {
+                const { idInstance, apiTokenInstance } = getConnectionParams();
+                
+                const response = await fetch(`${GREEN_API_BASE}/waInstance${idInstance}/getSettings/${apiTokenInstance}`);
+                const data = await response.json();
+                
+                displayResponse(data);
+            } catch (error) {
+                displayResponse(null, error.message);
+            }
+        }
+
+        // Get State Instance Method
+        async function getStateInstance() {
+            try {
+                const { idInstance, apiTokenInstance } = getConnectionParams();
+                
+                const response = await fetch(`${GREEN_API_BASE}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`);
+                const data = await response.json();
+                
+                displayResponse(data);
+            } catch (error) {
+                displayResponse(null, error.message);
+            }
+        }
+
+        // Send Message Method
+        async function sendMessage() {
+            try {
+                const { idInstance, apiTokenInstance } = getConnectionParams();
+                const phoneNumber = document.getElementById('phoneNumber').value.trim();
+                const messageText = document.getElementById('messageText').value.trim();
+                
+                if (!phoneNumber || !messageText) {
+                    throw new Error('Пожалуйста, заполните номер телефона и текст сообщения');
+                }
+                
+                const response = await fetch(
+                    `${GREEN_API_BASE}/waInstance${idInstance}/sendMessage/${apiTokenInstance}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chatId: phoneNumber + '@c.us',
+                            message: messageText
+                        })
+                    }
+                );
+                
+                const data = await response.json();
+                displayResponse(data);
+            } catch (error) {
+                displayResponse(null, error.message);
+            }
+        }
+
+        // Send File by URL Method
+        async function sendFileByUrl() {
+            try {
+                const { idInstance, apiTokenInstance } = getConnectionParams();
+                const phoneNumber = document.getElementById('filePhoneNumber').value.trim();
+                const fileUrl = document.getElementById('fileUrl').value.trim();
+                
+                if (!phoneNumber || !fileUrl) {
+                    throw new Error('Пожалуйста, заполните номер телефона и URL файла');
+                }
+                
+                const response = await fetch(
+                    `${GREEN_API_BASE}/waInstance${idInstance}/sendFileByUrl/${apiTokenInstance}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chatId: phoneNumber + '@c.us',
+                            urlFile: fileUrl
+                        })
+                    }
+                );
+                
+                const data = await response.json();
+                displayResponse(data);
+            } catch (error) {
+                displayResponse(null, error.message);
+            }
+        }
+
+        // Clear Response
+        function clearResponse() {
+            document.getElementById('responseArea').value = '';
+        }
+    </script>
+</body>
+</html>
